@@ -6,65 +6,66 @@ import math
 app = Ursina()
 
 # --------------------------------------------------
-# 【重要】白い背景を完全に黒で埋める設定
+# 【絶対黒化】画面の地の底まで真っ黒にする設定
 # --------------------------------------------------
-window.title = "CORRIDOR BREAKER 3D"
-window.borderless = False
-window.fullscreen = False
-window.color = color.black     # 背景を完全な黒に
-Sky(color=color.black)          # 空の空間も完全な黒に
+window.color = color.black
+camera.ui.color = color.black
+camera.clip_plane_near = 0.05
+Sky(color=color.black)  # 背景の空を完全な黒に
 
 # --------------------------------------------------
-# ステージ設定（天井を追加＆壁を分厚くして白漏れを完全防止）
+# 【修正】壁・床・天井をすべて「完全な黒（color.black）」に！
 # --------------------------------------------------
 CORRIDOR_WIDTH = 8
-CORRIDOR_HEIGHT = 6
+CORRIDOR_HEIGHT = 5
 CORRIDOR_LENGTH = 110
 
-# 1. 床（暗い黒鉄色）
+# 1. 床（黒）
 floor = Entity(
     model='cube', unlit=True,
-    color=color.rgb(20, 20, 22),
-    scale=(CORRIDOR_WIDTH + 4, 1, CORRIDOR_LENGTH + 10),
+    color=color.black,
+    scale=(CORRIDOR_WIDTH, 1, CORRIDOR_LENGTH + 20),
     position=(0, -0.5, CORRIDOR_LENGTH / 2),
     collider='box'
 )
 
-# 2. 天井（追加：上が白く見えるのを防ぐ）
+# 2. 天井（黒）
 ceiling = Entity(
     model='cube', unlit=True,
-    color=color.rgb(15, 15, 18),
-    scale=(CORRIDOR_WIDTH + 4, 1, CORRIDOR_LENGTH + 10),
+    color=color.black,
+    scale=(CORRIDOR_WIDTH, 1, CORRIDOR_LENGTH + 20),
     position=(0, CORRIDOR_HEIGHT + 0.5, CORRIDOR_LENGTH / 2),
     collider='box'
 )
 
-# 3. 左右の壁（暗いグレー）
+# 3. 左の壁（黒）
 left_wall = Entity(
     model='cube', unlit=True,
-    color=color.rgb(30, 30, 35),
-    scale=(2, CORRIDOR_HEIGHT + 2, CORRIDOR_LENGTH + 10),
-    position=(-CORRIDOR_WIDTH / 2 - 1, CORRIDOR_HEIGHT / 2, CORRIDOR_LENGTH / 2),
+    color=color.black,
+    scale=(1, CORRIDOR_HEIGHT + 2, CORRIDOR_LENGTH + 20),
+    position=(-CORRIDOR_WIDTH / 2, CORRIDOR_HEIGHT / 2, CORRIDOR_LENGTH / 2),
     collider='box'
 )
+
+# 4. 右の壁（黒）
 right_wall = Entity(
     model='cube', unlit=True,
-    color=color.rgb(30, 30, 35),
-    scale=(2, CORRIDOR_HEIGHT + 2, CORRIDOR_LENGTH + 10),
-    position=(CORRIDOR_WIDTH / 2 + 1, CORRIDOR_HEIGHT / 2, CORRIDOR_LENGTH / 2),
+    color=color.black,
+    scale=(1, CORRIDOR_HEIGHT + 2, CORRIDOR_LENGTH + 20),
+    position=(CORRIDOR_WIDTH / 2, CORRIDOR_HEIGHT / 2, CORRIDOR_LENGTH / 2),
     collider='box'
 )
 
-# 4. スタート背後の壁
+# 5. 後ろの壁（黒）
 back_wall = Entity(
     model='cube', unlit=True,
-    color=color.rgb(20, 20, 25),
-    scale=(CORRIDOR_WIDTH + 4, CORRIDOR_HEIGHT + 2, 2),
-    position=(0, CORRIDOR_HEIGHT / 2, -1),
+    color=color.black,
+    scale=(CORRIDOR_WIDTH + 2, CORRIDOR_HEIGHT + 2, 1),
+    position=(0, CORRIDOR_HEIGHT / 2, -5),
     collider='box'
 )
 
-# ネオンライン（床のガイド線）
+# ネオンライン（床のガイド線・暗闇の道しるべ）
 Entity(model='cube', unlit=True, color=color.cyan, scale=(0.08, 0.05, CORRIDOR_LENGTH), position=(-CORRIDOR_WIDTH/2 + 0.5, 0.01, CORRIDOR_LENGTH/2))
 Entity(model='cube', unlit=True, color=color.cyan, scale=(0.08, 0.05, CORRIDOR_LENGTH), position=(CORRIDOR_WIDTH/2 - 0.5, 0.01, CORRIDOR_LENGTH/2))
 
@@ -132,7 +133,7 @@ def create_bullet_impact(pos):
     destroy(impact, delay=1.8)
 
 # --------------------------------------------------
-# 物理障害物（ハードル＆柱）
+# 物理障害物（黒いステージに映える黄色と紫）
 # --------------------------------------------------
 obstacles = []
 
